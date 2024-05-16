@@ -17,6 +17,7 @@ def test_agent(n_games, q_table):
         while not done:
             actions = env.get_actions()
             action = agent.choose_action(state, actions)
+            print(f"State: {state}, Action: {action}")
             next_state, reward, done = env.step(action)
 
             if done and reward == 1:
@@ -35,7 +36,7 @@ for filename in os.listdir(trained_agents_folder):
         q_tables.append(q_table)
 
 # Test each agent
-n_games = 10000
+n_games = 10
 for i, q_table in enumerate(q_tables):
     win_percentage = test_agent(n_games, q_table)
     print(f'Agent {i+1} won {win_percentage:.2f}% of games.')

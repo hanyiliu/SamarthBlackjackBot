@@ -30,7 +30,14 @@ class Dealer:
         self.upcard = self.hand[0]
 
     def get_state(self):
-        return self.upcard, self.score
+        upcard_value = self.upcard.rank
+        if upcard_value in ["Jack", "Queen", "King"]:
+            upcard_value = 10
+        elif upcard_value == "Ace":
+            upcard_value = "Ace"
+        else:
+            upcard_value = int(upcard_value)
+        return upcard_value, self.score
 
     def __repr__(self):
         return f"Dealer(hand={self.hand}, score={self.score}, upcard={self.upcard})"

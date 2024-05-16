@@ -3,27 +3,30 @@ class Player:
         self.hands = [[]]
         self.scores = [0]
         self.bet = 0
+        self.stand = [False]
+
+    def stand_action(self, hand_index=0):
+        self.stand[hand_index] = True
 
     def hit(self, deck, hand_index=0):
         self.hands[hand_index].append(deck.draw())
         self.calculate_score(hand_index)
 
-    def stand(self):
-        pass
 
     def double_down(self, deck, hand_index=0):
         self.bet *= 2
         self.hit(deck, hand_index)
-        self.stand()
+        self.stand_action()
 
     def split(self, deck):
         self.hands = [[self.hands[0][0]], [self.hands[0][1]]]
         self.scores = [0, 0]
+        self.stand = [False, False]
         if self.hands[0][0].rank == "Ace":
             self.hit(deck, 0)
-            self.stand()
+            self.stand_action()
             self.hit(deck, 1)
-            self.stand()
+            self.stand_action()
         else:
             self.hit(deck, 0)
             self.hit(deck, 1)
@@ -44,7 +47,20 @@ class Player:
             num_aces -= 1
 
     def get_state(self):
-        return tuple(tuple(hand) for hand in self.hands), tuple(self.scores), self.bet
+        hands = []
+        for hand in self.hands:
+            hand_values = []
+            for card in hand:
+                value = card.rank
+                if value in ["Jack", "Queen", "King"]:
+                    value = 10
+                elif value == "Ace":
+                    value = "Ace"
+                else:
+                    value = int(value)
+                hand_values.append(value)
+            hands.append(tuple(hand_values))
+        return tuple(hands), tuple(self.scores), self.bet
 
     def __repr__(self):
         return f"Player(hands={self.hands}, scores={self.scores}, bet={self.bet})"

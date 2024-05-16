@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.insert(0, '../')
 
-from game import Game
+from blackjack_env.game import Game
 from unittest.mock import patch
 
 

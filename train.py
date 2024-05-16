@@ -3,15 +3,14 @@ from blackjack_env.environment import BlackjackEnvironment
 import numpy as np
 import os
 from test import test_agent
+import pandas as pd
 
 # Create an instance of the BlackjackEnvironment
 env = BlackjackEnvironment()
 
 # Define hyperparameter combinations to test
 hyperparameters = [
-    {'alpha': 0.1, 'gamma': 0.9, 'epsilon': 0.1},
-    {'alpha': 0.05, 'gamma': 0.95, 'epsilon': 0.05},
-    {'alpha': 0.01, 'gamma': 0.99, 'epsilon': 0.01},
+    {'alpha': 0.1, 'gamma': 0.9, 'epsilon': 0.1}
     # Add more combinations here...
 ]
 
@@ -28,7 +27,13 @@ for i, params in enumerate(hyperparameters):
     agent = BlackjackAgent(**params)
 
     # Train the agent
-    agent.train(env, episodes=10000)
+    agent.train(env, episodes=100000)
+
+    # Print out the Q-table
+    print(f"Agent {i+1} Q-table:")
+    q_table_list = [(state, action, q_value) for (state, action), q_value in agent.q_table.items()]
+    q_table_df = pd.DataFrame(q_table_list, columns=['State', 'Action', 'Q-value'])
+    print(q_table_df)
 
     # Save the trained Q-table to a file in the subfolder
     filename = f'q_table_{i+1}.npy'
